@@ -67,30 +67,35 @@
 
   <script>
     // ⚠️ 카카오 디벨로퍼스 > 내 애플리케이션 > 앱 키 > JavaScript 키
-    var KAKAO_JS_KEY = "b97c8c393dce8ade36638c1364e44d3e";
+    var KAKAO_JS_KEY = "여기에_JavaScript_키_입력";
 
-    Kakao.init(KAKAO_JS_KEY);
+    Kakao.init(b97c8c393dce8ade36638c1364e44d3e);
 
     // ⚠️ 도구 > 메시지 템플릿에서 확인한 template_id 숫자를 넣어주세요
     var KAKAO_TEMPLATE_ID = 135888;
 
-    function sendDiceMessage(command) {
+    // ⚠️ 빨간/파란 주사위 각각 쓸 이미지 주소를 넣어주세요 (raw.githack 주소 권장)
+    var RED_DICE_IMG = "여기에_빨간주사위_이미지_URL";
+    var BLUE_DICE_IMG = "여기에_파란주사위_이미지_URL";
+
+    function sendDiceMessage(command, imageUrl) {
       Kakao.Share.sendCustom({
         templateId: KAKAO_TEMPLATE_ID,
         templateArgs: {
-          GACHA_DESC: command
+          GACHA_DESC: command,
+          CHARACTER_NAME: "이환",
+          IMG_URL: imageUrl
         }
       });
     }
 
     document.getElementById('btn-red').addEventListener('click', function () {
-      sendDiceMessage("!빨간주사위 굴리기");
+      sendDiceMessage("!빨간주사위 굴리기", RED_DICE_IMG);
     });
 
     document.getElementById('btn-blue').addEventListener('click', function () {
-      sendDiceMessage("!파란주사위 굴리기");
+      sendDiceMessage("!파란주사위 굴리기", BLUE_DICE_IMG);
     });
   </script>
 </body>
-
 </html>
