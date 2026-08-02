@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>이환 주사위 굴리기</title>
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+    integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
+    crossorigin="anonymous"></script>
   <style>
     body {
       margin: 0;
@@ -19,17 +22,14 @@
       box-sizing: border-box;
       text-align: center;
     }
-    .dice {
-      font-size: 100px;
-      margin-bottom: 20px;
-    }
+    .dice { font-size: 100px; margin-bottom: 20px; }
     #status {
       font-size: 18px;
       margin-bottom: 30px;
       line-height: 1.6;
       color: #cccccc;
     }
-    a.roll-btn {
+    button.roll-btn {
       display: block;
       width: 260px;
       font-size: 22px;
@@ -37,9 +37,10 @@
       padding: 18px 0;
       border-radius: 14px;
       color: #ffffff;
-      text-decoration: none;
+      border: none;
       box-shadow: 0 6px 14px rgba(0,0,0,0.5);
       box-sizing: border-box;
+      cursor: pointer;
     }
     #btn-red { background: #ff4d4d; }
     #btn-blue { background: #4da6ff; margin-top: 16px; }
@@ -49,34 +50,47 @@
       color: #888888;
       max-width: 320px;
     }
-    .copy-hint {
-      margin-top: 18px;
-      font-size: 13px;
-      color: #666666;
-    }
   </style>
 </head>
 <body>
 
   <div class="dice">🎲</div>
-  <div id="status">버튼을 눌러 채팅방으로<br>주사위 굴리기 명령어를 보내주세요.</div>
+  <div id="status">버튼을 누르면 카카오 공유창이 열려요.<br>보낼 채팅방을 선택하면 자동 전송됩니다.</div>
 
-  <a class="roll-btn" id="btn-red" href="#">🔴 빨간주사위 굴리기</a>
-  <a class="roll-btn" id="btn-blue" href="#">🔵 파란주사위 굴리기</a>
+  <button class="roll-btn" id="btn-red">🔴 빨간주사위 굴리기</button>
+  <button class="roll-btn" id="btn-blue">🔵 파란주사위 굴리기</button>
 
   <div class="hint">
-    버튼이 안 눌리면 카카오톡 채팅창으로 돌아가서<br>
-    "!빨간주사위 굴리기" 또는 "!파란주사위 굴리기"를<br>
-    직접 입력해주세요.
+    공유창이 안 뜨면 카카오톡 인앱 브라우저가 아닌<br>
+    일반 브라우저(Safari/Chrome)로 열어보세요.
   </div>
 
   <script>
-    var btnRed = document.getElementById('btn-red');
-    var btnBlue = document.getElementById('btn-blue');
+    // ⚠️ 카카오 디벨로퍼스 > 내 애플리케이션 > 앱 키 > JavaScript 키
+    var KAKAO_JS_KEY = "여기에_JavaScript_키_입력";
 
-    btnRed.href = "kakaotalk://sendtext?text=" + encodeURIComponent("!빨간주사위 굴리기");
-    btnBlue.href = "kakaotalk://sendtext?text=" + encodeURIComponent("!파란주사위 굴리기");
+    Kakao.init(KAKAO_JS_KEY);
+
+    function sendDiceMessage(command) {
+      Kakao.Share.sendDefault({
+        objectType: 'text',
+        text: command,
+        link: {
+          // 카카오 공유는 link가 필수라 임의 페이지를 하나 걸어둡니다.
+          // 봇 코드에서는 이 링크가 아니라 text 앞부분만 확인하면 됩니다.
+          mobileWebUrl: 'https://eunsung82909473-art.github.io/yukari-nte-cards/',
+          webUrl: 'https://eunsung82909473-art.github.io/yukari-nte-cards/'
+        }
+      });
+    }
+
+    document.getElementById('btn-red').addEventListener('click', function () {
+      sendDiceMessage("!빨간주사위 굴리기");
+    });
+
+    document.getElementById('btn-blue').addEventListener('click', function () {
+      sendDiceMessage("!파란주사위 굴리기");
+    });
   </script>
 </body>
-
 </html>
