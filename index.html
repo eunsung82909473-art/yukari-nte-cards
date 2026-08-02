@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>이환 독립 주사위 가챠</title>
-  <!-- 카카오 SDK 불러오기 -->
-  <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+  <title>이환 주사위 굴리기</title>
   <style>
     body {
       margin: 0;
@@ -19,188 +17,77 @@
       font-family: Arial, sans-serif;
       padding: 20px;
       box-sizing: border-box;
+      text-align: center;
     }
     .dice {
-      font-size: 110px;
-      transition: transform 0.5s;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
+      font-size: 100px;
       margin-bottom: 20px;
-      display: none;
     }
-    #dice-red { color: #ff4d4d; }
-    #dice-blue { color: #4da6ff; }
-    
-    #result-box {
+    #status {
+      font-size: 18px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      color: #cccccc;
+    }
+    .roll-btn {
       font-size: 22px;
       font-weight: bold;
-      text-align: center;
-      margin-bottom: 20px;
-      min-height: 80px;
-      line-height: 1.6;
+      padding: 18px 40px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.5);
     }
-    .reward-img-box {
-      width: 240px;
-      height: 240px;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
-      margin-bottom: 30px;
-      display: none;
-      background: #2a2a2a;
-      border: 3px solid #fee500;
-    }
-    .reward-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    #btn-red { background: #ff4d4d; }
+    #btn-blue { background: #4da6ff; margin-top: 16px; }
+    .hint {
+      margin-top: 24px;
+      font-size: 13px;
+      color: #888888;
+      max-width: 320px;
     }
   </style>
 </head>
 <body>
 
-  <div id="dice-red" class="dice">🎲</div>
-  <div id="dice-blue" class="dice">🎲</div>
-  
-  <div id="result-box">가챠 데이터를 불러오는 중...</div>
-  
-  <div id="reward-box" class="reward-img-box">
-    <img id="reward-img" src="" alt="보상 이미지">
+  <div class="dice" id="dice-icon">🎲</div>
+  <div id="status">아래 버튼을 누르면 채팅방으로<br>주사위 굴리기 명령어가 전송됩니다.</div>
+
+  <button class="roll-btn" id="btn-red">🔴 빨간주사위 굴리기</button>
+  <button class="roll-btn" id="btn-blue">🔵 파란주사위 굴리기</button>
+
+  <div class="hint">
+    버튼이 안 눌리면 카카오톡 채팅창으로 돌아가서<br>
+    "!빨간주사위 굴리기" 또는 "!파란주사위 굴리기"를<br>
+    직접 입력해주세요.
   </div>
 
   <script>
-    // 카카오 SDK 초기화 (실패해도 나머지 기능은 정상 작동하도록 안전하게 처리)
-    const KAKAO_KEY = "b97c8c393dce8ade36638c1364e44d3e";
-    try {
-      if (typeof Kakao !== 'undefined' && !Kakao.isInitialized()) {
-        Kakao.init(KAKAO_KEY);
-      }
-    } catch (e) {
-      console.error('카카오 초기화 실패', e);
+    function sendToChat(command) {
+      // 카카오톡 채팅창에 텍스트를 채워넣는 딥링크
+      var url = "kakaotalk://sendtext?text=" + encodeURIComponent(command);
+      window.location.href = url;
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const chosenColor = params.get('color') || 'red';
+    document.getElementById('btn-red').addEventListener('click', function () {
+      sendToChat("!빨간주사위 굴리기");
+    });
 
-    // 저장소 raw 파일 기준 주소
-    const GITHUB_BASE_URL = "https://raw.githubusercontent.com/eunsung82909473-art/yukari-nte-cards/main/";
+    document.getElementById('btn-blue').addEventListener('click', function () {
+      sendToChat("!파란주사위 굴리기");
+    });
 
-    // 캐릭터(고정) 이미지
-    const IMAGES = {
-      shinku: GITHUB_BASE_URL + "1784576714624.png",
-      nanally: GITHUB_BASE_URL + "i-got-nanally-is-it-recommended-to-use-my-warp-statues-and-v0-xfftw87ed5yg1.png"
-    };
-
-    // A급 랜덤 풀 (7개)
-    const A_GRADE_POOL = [
-      GITHUB_BASE_URL + "fork_fudianling.png",
-      GITHUB_BASE_URL + "fullArt%20(1).webp",
-      GITHUB_BASE_URL + "fullArt%20(2).webp",
-      GITHUB_BASE_URL + "fullArt%20(3).webp",
-      GITHUB_BASE_URL + "fullArt%20(5).webp",
-      GITHUB_BASE_URL + "fullArt.webp",
-      GITHUB_BASE_URL + "icon-game.png"
-    ];
-
-    // S급 랜덤 풀 (신쿠 / 나날리 / 신규 이미지)
-    const S_GRADE_POOL = [
-      { name: "✨ S급 신쿠 당첨!", img: IMAGES.shinku },
-      { name: "✨ S급 나날리 당첨!", img: IMAGES.nanally },
-      { name: "✨ S급 아이템 당첨!", img: GITHUB_BASE_URL + "fullArt%20(4).webp" }
-    ];
-
-    function pickRandom(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    window.onload = function() {
-      if (chosenColor === 'blue') {
-        document.getElementById('dice-blue').style.display = 'block';
-      } else {
-        document.getElementById('dice-red').style.display = 'block';
-      }
-      rollSingleDice();
-    };
-
-    function rollSingleDice() {
-      const targetId = chosenColor === 'blue' ? 'dice-blue' : 'dice-red';
-      const diceElement = document.getElementById(targetId);
-      const resultBox = document.getElementById('result-box');
-      const rewardBox = document.getElementById('reward-box');
-      const rewardImg = document.getElementById('reward-img');
-      
-      const colorText = chosenColor === 'blue' ? '파란주사위' : '빨간주사위';
-      const colorHex = chosenColor === 'blue' ? '#4da6ff' : '#ff4d4d';
-      
-      diceElement.style.transform = "rotate(" + (Math.random() * 360 + 720) + "deg) scale(1.2)";
-      resultBox.innerHTML = `<span style="color: ${colorHex};">${colorText}</span> 굴리는 중... 🎲`;
-
-      setTimeout(() => {
-        diceElement.style.transform = "rotate(0deg) scale(1)";
-        
-        const diceNum = Math.floor(Math.random() * 6) + 1;
-        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-        diceElement.innerHTML = diceFaces[diceNum - 1];
-
-        let currentSlot = 29 + diceNum; 
-        
-        let characterName = "";
-        let gachaDesc = "";
-        let finalImg = "";
-        let hasImage = true;
-
-        // 💡 주사위 번호별 보상 매칭
-        if (diceNum === 6 || diceNum === 5) {
-          // S급: 신쿠 / 나날리 / 신규 이미지 중 랜덤
-          const sPick = pickRandom(S_GRADE_POOL);
-          characterName = sPick.name;
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n축하합니다! S급 보상을 획득하셨습니다.`;
-          finalImg = sPick.img;
-        } else if (diceNum === 4 || diceNum === 3) {
-          // A급: 7개 이미지 중 랜덤
-          characterName = "📦 A급 아이템 당첨!";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\nA급 아이템을 획득했습니다.`;
-          finalImg = pickRandom(A_GRADE_POOL);
-        } else if (diceNum === 2) {
-          characterName = "🔹 환석 보상";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n진화 및 가챠 재화인 환석 조각을 획득했습니다.`;
-          finalImg = "";
-          hasImage = false;
-        } else {
-          characterName = "🔹 폰즈 50000";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n성장에 필요한 기본 인게임 머니 5만 폰즈를 획득했습니다.`;
-          finalImg = GITHUB_BASE_URL + "6ac9209d7f918ce9d09c6a14059de5f2f0d80230a576b9c8c537a0c7313c8e03.png";
-        }
-
-        // 웹화면 먼저 띄우기
-        resultBox.innerHTML = `🎲 결과: <span style="color:${colorHex};">${colorText} [${diceNum}]</span><br>${characterName}`;
-        if (hasImage) {
-          rewardImg.src = finalImg;
-          rewardBox.style.display = 'block';
-        } else {
-          rewardBox.style.display = 'none';
-        }
-
-        // 💡 핵심: 연산 결과를 카카오 디벨로퍼스 템플릿(이미지 카드)으로 카톡방에 강제 발송
-        setTimeout(() => {
-          try {
-            if (hasImage && typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
-              Kakao.Share.sendCustom({
-                template_id: 135888, // 💡 본인의 카카오 디벨로퍼스 양면 ID 입력
-                template_args: {
-                  IMG_URL: finalImg,          // 변수 매칭
-                  CHARACTER_NAME: characterName, 
-                  GACHA_DESC: gachaDesc
-                }
-              });
-            }
-          } catch (e) {
-            console.error('카카오 공유 실패', e);
-          }
-        }, 800); // 결과 확인 후 0.8초 뒤 카톡 공유창 활성화
-
-      }, 1000);
+    // URL에 ?action=roll&color=red(or blue) 가 붙어서 들어온 경우, 바로 자동 전송
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'roll') {
+      var color = params.get('color') || 'red';
+      var command = color === 'blue' ? "!파란주사위 굴리기" : "!빨간주사위 굴리기";
+      document.getElementById('status').innerHTML = "잠시 후 자동으로 명령어를 전송합니다...";
+      setTimeout(function () {
+        sendToChat(command);
+      }, 400);
     }
   </script>
 </body>
-
 </html>
