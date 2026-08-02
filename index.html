@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html><html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>이환 독립 주사위 가챠</title>
   <!-- 카카오 SDK 불러오기 -->
-  <script src="https://kakaocdn.net" integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J" crossorigin="anonymous"></script>
+  <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -68,9 +67,15 @@
   </div>
 
   <script>
-    // 카카오 SDK 초기화
+    // 카카오 SDK 초기화 (실패해도 나머지 기능은 정상 작동하도록 안전하게 처리)
     const KAKAO_KEY = "b97c8c393dce8ade36638c1364e44d3e";
-    if (!Kakao.isInitialized()) { Kakao.init(KAKAO_KEY); }
+    try {
+      if (typeof Kakao !== 'undefined' && !Kakao.isInitialized()) {
+        Kakao.init(KAKAO_KEY);
+      }
+    } catch (e) {
+      console.error('카카오 초기화 실패', e);
+    }
 
     const params = new URLSearchParams(window.location.search);
     const chosenColor = params.get('color') || 'red';
@@ -153,18 +158,24 @@
 
         // 💡 핵심: 연산 결과를 카카오 디벨로퍼스 템플릿(이미지 카드)으로 카톡방에 강제 발송
         setTimeout(() => {
-          Kakao.Share.sendCustom({
-            template_id: 135888, // 💡 본인의 카카오 디벨로퍼스 양면 ID 입력
-            template_args: {
-              IMG_URL: finalImg,          // 변수 매칭
-              CHARACTER_NAME: characterName, 
-              GACHA_DESC: gachaDesc
+          try {
+            if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+              Kakao.Share.sendCustom({
+                template_id: 135888, // 💡 본인의 카카오 디벨로퍼스 양면 ID 입력
+                template_args: {
+                  IMG_URL: finalImg,          // 변수 매칭
+                  CHARACTER_NAME: characterName, 
+                  GACHA_DESC: gachaDesc
+                }
+              });
             }
-          });
+          } catch (e) {
+            console.error('카카오 공유 실패', e);
+          }
         }, 800); // 결과 확인 후 0.8초 뒤 카톡 공유창 활성화
 
       }, 1000);
     }
   </script>
 </body>
-</html>
+        </html>
