@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ko">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,14 +81,36 @@
     const params = new URLSearchParams(window.location.search);
     const chosenColor = params.get('color') || 'red';
 
-const GITHUB_BASE_URL = "https://raw.githubusercontent.com/eunsung82909473-art/yukari-nte-cards/main/";
-    
+    // 저장소 raw 파일 기준 주소
+    const GITHUB_BASE_URL = "https://raw.githubusercontent.com/eunsung82909473-art/yukari-nte-cards/main/";
+
+    // 캐릭터(고정) 이미지
     const IMAGES = {
-      shinku: GITHUB_BASE_URL + "1784576714624.png", 
-      illoi: GITHUB_BASE_URL + "580627a49349badeb6e3ae58b60c1573bc622d330886a9d985af5cf3c7376ac4.webp", 
-      chaos: GITHUB_BASE_URL + "b020ffe9d541d33ce0465bcd8cc9165385dc8abd91de7973a6f89d58b128987f.jpg", 
+      shinku: GITHUB_BASE_URL + "1784576714624.png",
       nanally: GITHUB_BASE_URL + "i-got-nanally-is-it-recommended-to-use-my-warp-statues-and-v0-xfftw87ed5yg1.png"
     };
+
+    // A급 랜덤 풀 (7개)
+    const A_GRADE_POOL = [
+      GITHUB_BASE_URL + "fork_fudianling.png",
+      GITHUB_BASE_URL + "fullArt%20(1).webp",
+      GITHUB_BASE_URL + "fullArt%20(2).webp",
+      GITHUB_BASE_URL + "fullArt%20(3).webp",
+      GITHUB_BASE_URL + "fullArt%20(5).webp",
+      GITHUB_BASE_URL + "fullArt.webp",
+      GITHUB_BASE_URL + "icon-game.png"
+    ];
+
+    // S급 랜덤 풀 (신쿠 / 나날리 / 신규 이미지)
+    const S_GRADE_POOL = [
+      { name: "✨ S급 신쿠 당첨!", img: IMAGES.shinku },
+      { name: "✨ S급 나날리 당첨!", img: IMAGES.nanally },
+      { name: "✨ S급 아이템 당첨!", img: GITHUB_BASE_URL + "fullArt%20(4).webp" }
+    ];
+
+    function pickRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
 
     window.onload = function() {
       if (chosenColor === 'blue') {
@@ -123,43 +146,44 @@ const GITHUB_BASE_URL = "https://raw.githubusercontent.com/eunsung82909473-art/y
         let characterName = "";
         let gachaDesc = "";
         let finalImg = "";
+        let hasImage = true;
 
-        // 💡 주사위 번호별 보상 이름 매칭 (보내주신 칸 데이터 반영)
-        if (diceNum === 6) {
-          characterName = "✨ S급 신쿠 당첨!";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n축하합니다! 최고 등급인 S급 신쿠 캐릭터를 획득하셨습니다.`;
-          finalImg = IMAGES.shinku;
-        } else if (diceNum === 5) {
-          characterName = "✨ S급 나날리 당첨!";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n축하합니다! S급 나날리 캐릭터를 획득하셨습니다.`;
-          finalImg = IMAGES.nanally;
-        } else if (diceNum === 4) {
-          characterName = "📦 A급 무기 선택 상자";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n무기를 장착할 수 있는 상급 장비 상자를 획득했습니다.`;
-          finalImg = IMAGES.illoi; // 가상의 대표 이미지 매칭
-        } else if (diceNum === 3) {
-          characterName = "📦 A급 아크 상자";
-          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n보드판 발판 보상으로 아크 보관 상자를 획득했습니다.`;
-          finalImg = IMAGES.chaos;
+        // 💡 주사위 번호별 보상 매칭
+        if (diceNum === 6 || diceNum === 5) {
+          // S급: 신쿠 / 나날리 / 신규 이미지 중 랜덤
+          const sPick = pickRandom(S_GRADE_POOL);
+          characterName = sPick.name;
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n축하합니다! S급 보상을 획득하셨습니다.`;
+          finalImg = sPick.img;
+        } else if (diceNum === 4 || diceNum === 3) {
+          // A급: 7개 이미지 중 랜덤
+          characterName = "📦 A급 아이템 당첨!";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\nA급 아이템을 획득했습니다.`;
+          finalImg = pickRandom(A_GRADE_POOL);
         } else if (diceNum === 2) {
           characterName = "🔹 환석 보상";
           gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n진화 및 가챠 재화인 환석 조각을 획득했습니다.`;
-          finalImg = IMAGES.nanally;
+          finalImg = "";
+          hasImage = false;
         } else {
           characterName = "🔹 폰즈 50000";
           gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n성장에 필요한 기본 인게임 머니 5만 폰즈를 획득했습니다.`;
-          finalImg = IMAGES.nanally;
+          finalImg = GITHUB_BASE_URL + "6ac9209d7f918ce9d09c6a14059de5f2f0d80230a576b9c8c537a0c7313c8e03.png";
         }
 
         // 웹화면 먼저 띄우기
         resultBox.innerHTML = `🎲 결과: <span style="color:${colorHex};">${colorText} [${diceNum}]</span><br>${characterName}`;
-        rewardImg.src = finalImg;
-        rewardBox.style.display = 'block';
+        if (hasImage) {
+          rewardImg.src = finalImg;
+          rewardBox.style.display = 'block';
+        } else {
+          rewardBox.style.display = 'none';
+        }
 
         // 💡 핵심: 연산 결과를 카카오 디벨로퍼스 템플릿(이미지 카드)으로 카톡방에 강제 발송
         setTimeout(() => {
           try {
-            if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+            if (hasImage && typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
               Kakao.Share.sendCustom({
                 template_id: 135888, // 💡 본인의 카카오 디벨로퍼스 양면 ID 입력
                 template_args: {
@@ -178,4 +202,5 @@ const GITHUB_BASE_URL = "https://raw.githubusercontent.com/eunsung82909473-art/y
     }
   </script>
 </body>
-        </html>
+
+</html>
