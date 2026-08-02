@@ -2,90 +2,169 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-  <title>카카오톡 공유</title>
-
-  <!-- 카카오 JavaScript SDK -->
-  <script
-    src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js"
-    integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J"
-    crossorigin="anonymous">
-  </script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이환 독립 주사위 가챠</title>
+  <!-- 카카오 SDK 불러오기 -->
+  <script src="https://kakaocdn.net" integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J" crossorigin="anonymous"></script>
   <style>
     body {
       margin: 0;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: #f5f5f5;
+      background: #191919;
+      color: #ffffff;
       font-family: Arial, sans-serif;
+      padding: 20px;
+      box-sizing: border-box;
     }
-
-    #kakao-share-btn {
-      padding: 15px 24px;
-      border: none;
-      border-radius: 10px;
-      background: #fee500;
-      color: #191919;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
+    .dice {
+      font-size: 110px;
+      transition: transform 0.5s;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
+      margin-bottom: 20px;
+      display: none;
     }
-
-    #kakao-share-btn:hover {
-      opacity: 0.9;
+    #dice-red { color: #ff4d4d; }
+    #dice-blue { color: #4da6ff; }
+    
+    #result-box {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      min-height: 80px;
+      line-height: 1.6;
+    }
+    .reward-img-box {
+      width: 240px;
+      height: 240px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+      margin-bottom: 30px;
+      display: none;
+      background: #2a2a2a;
+      border: 3px solid #fee500;
+    }
+    .reward-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
-
 <body>
-  <button type="button" id="kakao-share-btn">
-    카카오톡으로 공유하기
-  </button>
+
+  <div id="dice-red" class="dice">🎲</div>
+  <div id="dice-blue" class="dice">🎲</div>
+  
+  <div id="result-box">가챠 데이터를 불러오는 중...</div>
+  
+  <div id="reward-box" class="reward-img-box">
+    <img id="reward-img" src="" alt="보상 이미지">
+  </div>
 
   <script>
-    // 카카오 JavaScript 키
-    const KAKAO_JAVASCRIPT_KEY =
-      "b97c8c393dce8ade36638c1364e44d3e";
-
     // 카카오 SDK 초기화
-    if (!Kakao.isInitialized()) {
-      Kakao.init(KAKAO_JAVASCRIPT_KEY);
-    }
+    const KAKAO_KEY = "b97c8c393dce8ade36638c1364e44d3e";
+    if (!Kakao.isInitialized()) { Kakao.init(KAKAO_KEY); }
 
-    console.log("카카오 SDK 초기화 여부:", Kakao.isInitialized());
+    const params = new URLSearchParams(window.location.search);
+    const chosenColor = params.get('color') || 'red';
 
-    // 현재 페이지 주소
-    const shareUrl = window.location.href.split("#")[0];
+    const GITHUB_BASE_URL = "https://github.io";
+    
+    const IMAGES = {
+      shinku: GITHUB_BASE_URL + "1784576714624.png", 
+      illoi: GITHUB_BASE_URL + "580627a49349badeb6e3ae58b60c1573bc622d330886a9d985af5cf3c7376ac4.webp", 
+      chaos: GITHUB_BASE_URL + "b020ffe9d541d33ce0465bcd8cc9165385dc8abd91de7973a6f89d58b128987f.jpg", 
+      nanally: GITHUB_BASE_URL + "i-got-nanally-is-it-recommended-to-use-my-warp-statues-and-v0-xfftw87ed5yg1.png"
+    };
 
-    // 카카오톡 공유 버튼 생성
-    Kakao.Share.createDefaultButton({
-      container: "#kakao-share-btn",
+    window.onload = function() {
+      if (chosenColor === 'blue') {
+        document.getElementById('dice-blue').style.display = 'block';
+      } else {
+        document.getElementById('dice-red').style.display = 'block';
+      }
+      rollSingleDice();
+    };
 
-      objectType: "text",
+    function rollSingleDice() {
+      const targetId = chosenColor === 'blue' ? 'dice-blue' : 'dice-red';
+      const diceElement = document.getElementById(targetId);
+      const resultBox = document.getElementById('result-box');
+      const rewardBox = document.getElementById('reward-box');
+      const rewardImg = document.getElementById('reward-img');
+      
+      const colorText = chosenColor === 'blue' ? '파란주사위' : '빨간주사위';
+      const colorHex = chosenColor === 'blue' ? '#4da6ff' : '#ff4d4d';
+      
+      diceElement.style.transform = "rotate(" + (Math.random() * 360 + 720) + "deg) scale(1.2)";
+      resultBox.innerHTML = `<span style="color: ${colorHex};">${colorText}</span> 굴리는 중... 🎲`;
 
-      text: "이 페이지를 확인해 보세요.",
+      setTimeout(() => {
+        diceElement.style.transform = "rotate(0deg) scale(1)";
+        
+        const diceNum = Math.floor(Math.random() * 6) + 1;
+        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        diceElement.innerHTML = diceFaces[diceNum - 1];
 
-      link: {
-        mobileWebUrl: shareUrl,
-        webUrl: shareUrl
-      },
+        let currentSlot = 29 + diceNum; 
+        
+        let characterName = "";
+        let gachaDesc = "";
+        let finalImg = "";
 
-      buttons: [
-        {
-          title: "페이지 열기",
-          link: {
-            mobileWebUrl: shareUrl,
-            webUrl: shareUrl
-          }
+        // 💡 주사위 번호별 보상 이름 매칭 (보내주신 칸 데이터 반영)
+        if (diceNum === 6) {
+          characterName = "✨ S급 신쿠 당첨!";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n축하합니다! 최고 등급인 S급 신쿠 캐릭터를 획득하셨습니다.`;
+          finalImg = IMAGES.shinku;
+        } else if (diceNum === 5) {
+          characterName = "✨ S급 나날리 당첨!";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n축하합니다! S급 나날리 캐릭터를 획득하셨습니다.`;
+          finalImg = IMAGES.nanally;
+        } else if (diceNum === 4) {
+          characterName = "📦 A급 무기 선택 상자";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n무기를 장착할 수 있는 상급 장비 상자를 획득했습니다.`;
+          finalImg = IMAGES.illoi; // 가상의 대표 이미지 매칭
+        } else if (diceNum === 3) {
+          characterName = "📦 A급 아크 상자";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n보드판 발판 보상으로 아크 보관 상자를 획득했습니다.`;
+          finalImg = IMAGES.chaos;
+        } else if (diceNum === 2) {
+          characterName = "🔹 환석 보상";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n진화 및 가챠 재화인 환석 조각을 획득했습니다.`;
+          finalImg = IMAGES.nanally;
+        } else {
+          characterName = "🔹 폰즈 50000";
+          gachaDesc = `[이환 보드판 ${currentSlot}번 칸]\n성장에 필요한 기본 인게임 머니 5만 폰즈를 획득했습니다.`;
+          finalImg = IMAGES.nanally;
         }
-      ]
-    });
+
+        // 웹화면 먼저 띄우기
+        resultBox.innerHTML = `🎲 결과: <span style="color:${colorHex};">${colorText} [${diceNum}]</span><br>${characterName}`;
+        rewardImg.src = finalImg;
+        rewardBox.style.display = 'block';
+
+        // 💡 핵심: 연산 결과를 카카오 디벨로퍼스 템플릿(이미지 카드)으로 카톡방에 강제 발송
+        setTimeout(() => {
+          Kakao.Share.sendCustom({
+            template_id: 135888, // 💡 본인의 카카오 디벨로퍼스 양면 ID 입력
+            template_args: {
+              IMG_URL: finalImg,          // 변수 매칭
+              CHARACTER_NAME: characterName, 
+              GACHA_DESC: gachaDesc
+            }
+          });
+        }, 800); // 결과 확인 후 0.8초 뒤 카톡 공유창 활성화
+
+      }, 1000);
+    }
   </script>
 </body>
 </html>
