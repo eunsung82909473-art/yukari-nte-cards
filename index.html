@@ -67,16 +67,17 @@
 
   <script>
     // ⚠️ 카카오 디벨로퍼스 > 내 애플리케이션 > 앱 키 > JavaScript 키
-    var KAKAO_JS_KEY = "여기에_JavaScript_키_입력";
+    var KAKAO_JS_KEY = "b97c8c393dce8ade36638c1364e44d3e";
 
-    Kakao.init(b97c8c393dce8ade36638c1364e44d3e);
+    Kakao.init(KAKAO_JS_KEY);
 
     // ⚠️ 도구 > 메시지 템플릿에서 확인한 template_id 숫자를 넣어주세요
     var KAKAO_TEMPLATE_ID = 135888;
 
     // ⚠️ 빨간/파란 주사위 각각 쓸 이미지 주소를 넣어주세요 (raw.githack 주소 권장)
-    var RED_DICE_IMG = "여기에_빨간주사위_이미지_URL";
-    var BLUE_DICE_IMG = "여기에_파란주사위_이미지_URL";
+    // 나중에 원하는 이미지로 바꿔도 됩니다. 지금은 임시 주사위 이미지로 채워뒀어요.
+    var RED_DICE_IMG = "https://raw.githack.com/eunsung82909473-art/yukari-nte-cards/main/images/red_dice.png";
+    var BLUE_DICE_IMG = "https://raw.githack.com/eunsung82909473-art/yukari-nte-cards/main/images/blue_dice.png";
 
     function sendDiceMessage(command, imageUrl) {
       Kakao.Share.sendCustom({
@@ -98,4 +99,5 @@
     });
   </script>
 </body>
+
 </html>
