@@ -71,15 +71,14 @@
 
     Kakao.init(KAKAO_JS_KEY);
 
+    // ⚠️ 도구 > 메시지 템플릿에서 확인한 template_id 숫자를 넣어주세요
+    var KAKAO_TEMPLATE_ID = 135888;
+
     function sendDiceMessage(command) {
-      Kakao.Share.sendDefault({
-        objectType: 'text',
-        text: command,
-        link: {
-          // 카카오 공유는 link가 필수라 임의 페이지를 하나 걸어둡니다.
-          // 봇 코드에서는 이 링크가 아니라 text 앞부분만 확인하면 됩니다.
-          mobileWebUrl: 'https://eunsung82909473-art.github.io/yukari-nte-cards/',
-          webUrl: 'https://eunsung82909473-art.github.io/yukari-nte-cards/'
+      Kakao.Share.sendCustom({
+        templateId: KAKAO_TEMPLATE_ID,
+        templateArgs: {
+          GACHA_DESC: command
         }
       });
     }
@@ -93,4 +92,5 @@
     });
   </script>
 </body>
+
 </html>
