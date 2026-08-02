@@ -29,15 +29,17 @@
       line-height: 1.6;
       color: #cccccc;
     }
-    .roll-btn {
+    a.roll-btn {
+      display: block;
+      width: 260px;
       font-size: 22px;
       font-weight: bold;
-      padding: 18px 40px;
-      border: none;
+      padding: 18px 0;
       border-radius: 14px;
-      cursor: pointer;
       color: #ffffff;
+      text-decoration: none;
       box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+      box-sizing: border-box;
     }
     #btn-red { background: #ff4d4d; }
     #btn-blue { background: #4da6ff; margin-top: 16px; }
@@ -47,15 +49,20 @@
       color: #888888;
       max-width: 320px;
     }
+    .copy-hint {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #666666;
+    }
   </style>
 </head>
 <body>
 
-  <div class="dice" id="dice-icon">🎲</div>
-  <div id="status">아래 버튼을 누르면 채팅방으로<br>주사위 굴리기 명령어가 전송됩니다.</div>
+  <div class="dice">🎲</div>
+  <div id="status">버튼을 눌러 채팅방으로<br>주사위 굴리기 명령어를 보내주세요.</div>
 
-  <button class="roll-btn" id="btn-red">🔴 빨간주사위 굴리기</button>
-  <button class="roll-btn" id="btn-blue">🔵 파란주사위 굴리기</button>
+  <a class="roll-btn" id="btn-red" href="#">🔴 빨간주사위 굴리기</a>
+  <a class="roll-btn" id="btn-blue" href="#">🔵 파란주사위 굴리기</a>
 
   <div class="hint">
     버튼이 안 눌리면 카카오톡 채팅창으로 돌아가서<br>
@@ -64,30 +71,12 @@
   </div>
 
   <script>
-    function sendToChat(command) {
-      // 카카오톡 채팅창에 텍스트를 채워넣는 딥링크
-      var url = "kakaotalk://sendtext?text=" + encodeURIComponent(command);
-      window.location.href = url;
-    }
+    var btnRed = document.getElementById('btn-red');
+    var btnBlue = document.getElementById('btn-blue');
 
-    document.getElementById('btn-red').addEventListener('click', function () {
-      sendToChat("!빨간주사위 굴리기");
-    });
-
-    document.getElementById('btn-blue').addEventListener('click', function () {
-      sendToChat("!파란주사위 굴리기");
-    });
-
-    // URL에 ?action=roll&color=red(or blue) 가 붙어서 들어온 경우, 바로 자동 전송
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('action') === 'roll') {
-      var color = params.get('color') || 'red';
-      var command = color === 'blue' ? "!파란주사위 굴리기" : "!빨간주사위 굴리기";
-      document.getElementById('status').innerHTML = "잠시 후 자동으로 명령어를 전송합니다...";
-      setTimeout(function () {
-        sendToChat(command);
-      }, 400);
-    }
+    btnRed.href = "kakaotalk://sendtext?text=" + encodeURIComponent("!빨간주사위 굴리기");
+    btnBlue.href = "kakaotalk://sendtext?text=" + encodeURIComponent("!파란주사위 굴리기");
   </script>
 </body>
+
 </html>
