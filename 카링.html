@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>카카오톡 공유</title>
+
+  <!-- 카카오 JavaScript SDK -->
+  <script
+    src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js"
+    integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J"
+    crossorigin="anonymous">
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    #kakao-share-btn {
+      padding: 15px 24px;
+      border: none;
+      border-radius: 10px;
+      background: #fee500;
+      color: #191919;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #kakao-share-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+  <button type="button" id="kakao-share-btn">
+    카카오톡으로 공유하기
+  </button>
+
+  <script>
+    // 카카오 JavaScript 키
+    const KAKAO_JAVASCRIPT_KEY =
+      "b97c8c393dce8ade36638c1364e44d3e";
+
+    // 카카오 SDK 초기화
+    if (!Kakao.isInitialized()) {
+      Kakao.init(KAKAO_JAVASCRIPT_KEY);
+    }
+
+    console.log("카카오 SDK 초기화 여부:", Kakao.isInitialized());
+
+    // 현재 페이지 주소
+    const shareUrl = window.location.href.split("#")[0];
+
+    // 카카오톡 공유 버튼 생성
+    Kakao.Share.createDefaultButton({
+      container: "#kakao-share-btn",
+
+      objectType: "text",
+
+      text: "이 페이지를 확인해 보세요.",
+
+      link: {
+        mobileWebUrl: shareUrl,
+        webUrl: shareUrl
+      },
+
+      buttons: [
+        {
+          title: "페이지 열기",
+          link: {
+            mobileWebUrl: shareUrl,
+            webUrl: shareUrl
+          }
+        }
+      ]
+    });
+  </script>
+</body>
+</html>
