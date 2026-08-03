@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ko">
+  <!DOCTYPE html><html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,10 +73,13 @@
     // ⚠️ 도구 > 메시지 템플릿에서 확인한 template_id 숫자를 넣어주세요
     var KAKAO_TEMPLATE_ID = 135888;
 
-    // ⚠️ 빨간/파란 주사위 각각 쓸 이미지 주소를 넣어주세요 (raw.githack 주소 권장)
-    // 나중에 원하는 이미지로 바꿔도 됩니다. 지금은 임시 주사위 이미지로 채워뒀어요.
-    var RED_DICE_IMG = "https://raw.githack.com/eunsung82909473-art/yukari-nte-cards/main/ae2d26193deabf3233489c18f72eea65a2121a2558a7e7867983ce2dd332a737.webp";
-    var BLUE_DICE_IMG = "https://raw.githack.com/eunsung82909473-art/yukari-nte-cards/main/dc2a9c5f0f1bc232f94861985fe5080c1451b031715eb3a275dc1d43522af422.webp";
+    // ✅ GitHub Pages 도메인으로 변경 (raw.githack.com 대신 github.io 정식 배포 주소 사용)
+    var CARD_BASE_URL = "https://eunsung82909473-art.github.io/yukari-nte-cards/";
+
+    // ⚠️ 빨간/파란 주사위 각각 쓸 이미지 파일명만 적어주면 됩니다.
+    // 저장소 루트에 있는 파일명 그대로 사용 (하위 폴더에 있다면 "images/파일명.webp"처럼 경로 포함)
+    var RED_DICE_IMG = CARD_BASE_URL + "ae2d26193deabf3233489c18f72eea65a2121a2558a7e7867983ce2dd332a737.webp";
+    var BLUE_DICE_IMG = CARD_BASE_URL + "dc2a9c5f0f1bc232f94861985fe5080c1451b031715eb3a275dc1d43522af422.webp";
 
     function sendDiceMessage(command, imageUrl) {
       Kakao.Share.sendCustom({
@@ -100,4 +102,5 @@
   </script>
 </body>
 
-</html>
+
+  </html>    
