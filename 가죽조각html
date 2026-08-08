@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가죽 조각</title>
+<meta property="og:title" content="가죽 조각">
+<meta property="og:description" content="고블린 드랍 재료">
+<meta property="og:image" content="https://eunsung82909473-art.github.io/patch-leather-isolated-white-background_1053-43277.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://eunsung82909473-art.github.io/items/가죽 조각.html">
+<style>
+  body { margin:0; font-family: -apple-system, sans-serif; background:#1a1a2e; color:#fff;
+         display:flex; flex-direction:column; align-items:center; padding:24px; }
+  img { max-width:320px; width:100%; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,.4); }
+  h1 { font-size:20px; margin:16px 0 4px; }
+  p  { font-size:14px; color:#ccc; text-align:center; max-width:320px; }
+</style>
+</head>
+<body>
+  <img src="https://eunsung82909473-art.github.io/patch-leather-isolated-white-background_1053-43277.jpg" alt="가죽 조각">
+  <h1>가죽 조각</h1>
+  <p>고블린 드랍 재료</p>
+</body>
+</html>
