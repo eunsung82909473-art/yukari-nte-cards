@@ -6,9 +6,9 @@
 <title>고대용</title>
 <meta property="og:title" content="고대용">
 <meta property="og:description" content="👑 보스 | Lv.40 | HP 3000 | 공격 200">
-<meta property="og:image" content="https://eunsung82909473-art.github.io/1786190339566.jpg">
+<meta property="og:image" content="https://eunsung82909473-art.github.io/yukari-nte-cards/1786190339566.jpg">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://eunsung82909473-art.github.io/monsters/고대용.html">
+<meta property="og:url" content="https://eunsung82909473-art.github.io/yukari-nte-cards/monsters/고대용.html">
 <style>
   body { margin:0; font-family: -apple-system, sans-serif; background:#1a1a2e; color:#fff;
          display:flex; flex-direction:column; align-items:center; padding:24px; }
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-  <img src="https://eunsung82909473-art.github.io/1786190339566.jpg" alt="고대용">
+  <img src="https://eunsung82909473-art.github.io/yukari-nte-cards/1786190339566.jpg" alt="고대용">
   <h1>고대용</h1>
   <p>👑 보스 | Lv.40 | HP 3000 | 공격 200</p>
 </body>
