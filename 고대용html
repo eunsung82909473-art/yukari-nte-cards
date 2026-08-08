@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고대용</title>
+<meta property="og:title" content="고대용">
+<meta property="og:description" content="👑 보스 | Lv.40 | HP 3000 | 공격 200">
+<meta property="og:image" content="https://eunsung82909473-art.github.io/1786190339566.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://eunsung82909473-art.github.io/monsters/고대용.html">
+<style>
+  body { margin:0; font-family: -apple-system, sans-serif; background:#1a1a2e; color:#fff;
+         display:flex; flex-direction:column; align-items:center; padding:24px; }
+  img { max-width:320px; width:100%; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,.4); }
+  h1 { font-size:20px; margin:16px 0 4px; }
+  p  { font-size:14px; color:#ccc; text-align:center; max-width:320px; }
+</style>
+</head>
+<body>
+  <img src="https://eunsung82909473-art.github.io/1786190339566.jpg" alt="고대용">
+  <h1>고대용</h1>
+  <p>👑 보스 | Lv.40 | HP 3000 | 공격 200</p>
+</body>
+</html>
